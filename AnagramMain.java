@@ -1,29 +1,53 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+/* Developer: Daniel Busuttil
+ * Start date: 7 February 2018
+ * Last update: 13 February 2018
+ * 
+ * Description:
+ * Program designed to take an input word and return an ArrayList of all possible anagrams. Viable 
+ * words are pulled from a textfile, "wordList.txt", which contains roughly 70,000 words (in the
+ * English language), not accounting for slang. */
 
+// Necessary libraries for our program:
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
+// Class declaration, extends a personal library of methods
 public class AnagramMain extends HelperLibrary {
-  
-  
-  
-  private static final int MIN_NUM_ANAGRAMS = 5;
-  private static final int DEFAULT_WORD_LENGTH = 3;
-  private static final int MAX_WORD_LENGTH = 7;
+  // Private ArrayList to keep track of viable words, based on our text file
   private static final ArrayList<String> wordList = new ArrayList<String>();
   
-  /*
-  public AnagramDictionary(Reader reader) throws IOException {
-    BufferedReader in = new BufferedReader(reader);
-    String line;
-    while((line = in.readLine()) != null) {
-      String word = line.trim();
-      wordList.add(word);
+  // Method to build our program's dictionary of words (~69,000 words)
+  private boolean buildDictionary( String fileName ) throws IOException {
+    try {
+      // I/O stream
+      BufferedReader inputStream =  new BufferedReader( new FileReader(fileName) );
+      
+      // String object to hold each line of data; in the text file only a single word is on a line
+      String line;
+      // While loop to read each line of data and trim all whitespace/non-character input
+      while( ( line = inputStream.readLine() ) != null ) {
+        String word = line.trim();
+        wordList.add(word);
+      }
+      return true;
+    }
+    
+    /* This should never be reached as we only invoke this method with the correct text file but
+     * in order to account for safety we handle the possibilty of an incorrect fileName input */
+    catch( FileNotFoundException ex ) {
+      System.out.println("Unable to open file '" + fileName + "'");
+      return false;
+    }
+    
+    // If we have some issue reading the file, we handle it here:
+    catch( IOException ex ) {
+      System.out.println("Error reading file '" + fileName + "'");
+      return false;
     }
   }
-  */
   
   // MergeSort implementation of alphabetically sorting our String, O(log n)
   public String sortLetters(String input) {
@@ -46,7 +70,8 @@ public class AnagramMain extends HelperLibrary {
     return result;
   }
   
-  public List<String> getAnagrams(String targetWord) {
+  // Returns an ArrayList
+  public ArrayList<String> getAnagrams(String targetWord) {
     ArrayList<String> result = new ArrayList<String>();
     String sortedTW = sortLetters(targetWord);
     for(int i = 0; i < wordList.size() - 1; i ++){
