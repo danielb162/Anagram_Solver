@@ -19,8 +19,14 @@ public class AnagramMain extends HelperLibrary {
   // Private ArrayList to keep track of viable words, based on our text file
   private static final ArrayList<String> wordList = new ArrayList<String>();
   
+  // Constructor with a hardcoded path to our dictionry textfile, if construction fails, it prints an error message
+  public AnagramMain() throws IOException, FileNotFoundException {
+    if ( !buildDictionary("../assets/wordList.txt") )
+      System.err.println("Initialization failed.");
+  }
+  
   // Method to build our program's dictionary of words (~69,000 words)
-  private boolean buildDictionary( String fileName ) throws IOException {
+  private boolean buildDictionary( String fileName ) throws IOException, FileNotFoundException {
     try {
       // I/O stream
       BufferedReader inputStream =  new BufferedReader( new FileReader(fileName) );
@@ -96,7 +102,9 @@ public class AnagramMain extends HelperLibrary {
     return result;
   }
   
-  
+  public static void main(String[] args) throws IOException, FileNotFoundException {
+    AnagramMain thing = new AnagramMain();
+  }
   
   
 }
